@@ -1,0 +1,14 @@
+title New note diagram
+
+participant Client
+participant Server
+
+
+Client->Server:Client navigates to the web-page (GET request)
+Client<-Server:Server sends HTML back to the Client
+Client->Server:Client requests for 'main.css' (GET request)
+Client<-Server:Server sends back the 'main.css' file
+Client->Server:Client requests for 'spa.js' (GET Request)
+Client<-Server:Server sends back the 'spa.js' file
+Client->Server:Client parses, JS, sends an XHR request to Server for 'data.json'
+Client<-Server:Server sends back the 'data.json' file
