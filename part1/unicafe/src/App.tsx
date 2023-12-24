@@ -9,6 +9,20 @@ type StatisticsProps = {
   positiveRatio: number;
 };
 
+const StatisticLine = ({
+  text,
+  value,
+}: {
+  text: string;
+  value: number | string;
+}) => {
+  return (
+    <p>
+      {text} {value}
+    </p>
+  );
+};
+
 const Statistics = ({
   good,
   neutral,
@@ -29,13 +43,30 @@ const Statistics = ({
   return (
     <>
       <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {allVotes}</p>
-      <p>average {isNaN(average) ? 0 : average}</p>
-      <p>positive {isNaN(positiveRatio) ? 0 : positiveRatio} %</p>
+      <StatisticLine text="good" value={good} />
+      <StatisticLine text="neutral" value={neutral} />
+      <StatisticLine text="bad" value={bad} />
+      <StatisticLine text="all" value={allVotes} />
+      <StatisticLine text="average" value={isNaN(average) ? 0 : average} />
+      <StatisticLine
+        text="positive"
+        value={isNaN(positiveRatio) ? 0 : `${positiveRatio} %`}
+      />
     </>
+  );
+};
+
+const Button = ({
+  text,
+  clickHandler,
+}: {
+  text: string;
+  clickHandler: () => void;
+}) => {
+  return (
+    <button type="button" onClick={clickHandler}>
+      {text}
+    </button>
   );
 };
 
@@ -51,15 +82,9 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      <button type="button" onClick={() => setGood(good + 1)}>
-        good
-      </button>
-      <button type="button" onClick={() => setNeutral(neutral + 1)}>
-        neutral
-      </button>
-      <button type="button" onClick={() => setBad(bad + 1)}>
-        bad
-      </button>
+      <Button text="good" clickHandler={() => setGood(good + 1)} />
+      <Button text="neutral" clickHandler={() => setNeutral(neutral + 1)} />
+      <Button text="bad" clickHandler={() => setBad(bad + 1)} />
       <Statistics
         good={good}
         neutral={neutral}
