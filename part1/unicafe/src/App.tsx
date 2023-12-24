@@ -17,9 +17,9 @@ const StatisticLine = ({
   value: number | string;
 }) => {
   return (
-    <p>
+    <td>
       {text} {value}
-    </p>
+    </td>
   );
 };
 
@@ -43,15 +43,34 @@ const Statistics = ({
   return (
     <>
       <h1>statistics</h1>
-      <StatisticLine text="good" value={good} />
-      <StatisticLine text="neutral" value={neutral} />
-      <StatisticLine text="bad" value={bad} />
-      <StatisticLine text="all" value={allVotes} />
-      <StatisticLine text="average" value={isNaN(average) ? 0 : average} />
-      <StatisticLine
-        text="positive"
-        value={isNaN(positiveRatio) ? 0 : `${positiveRatio} %`}
-      />
+      <table>
+        <tbody>
+          <tr>
+            <StatisticLine text="good" value={good} />
+          </tr>
+          <tr>
+            <StatisticLine text="neutral" value={neutral} />
+          </tr>
+          <tr>
+            <StatisticLine text="bad" value={bad} />
+          </tr>
+          <tr>
+            <StatisticLine text="all" value={allVotes} />
+          </tr>
+          <tr>
+            <StatisticLine
+              text="average"
+              value={isNaN(average) ? 0 : average}
+            />
+          </tr>
+          <tr>
+            <StatisticLine
+              text="positive"
+              value={isNaN(positiveRatio) ? 0 : `${positiveRatio} %`}
+            />
+          </tr>
+        </tbody>
+      </table>
     </>
   );
 };
