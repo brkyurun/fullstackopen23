@@ -40,7 +40,9 @@ const Content = ({
 const Total = ({ exerciseCounts }: { exerciseCounts: number[] }) => {
   return (
     <p>
-      Number of exercises {exerciseCounts.reduce((prev, curr) => prev + curr)}
+      <strong>
+        total of {exerciseCounts.reduce((prev, curr) => prev + curr)} exercises
+      </strong>
     </p>
   );
 };
@@ -74,6 +76,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3,
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id: 4,
       },
     ],
   };
