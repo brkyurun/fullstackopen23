@@ -6,6 +6,12 @@ const App = () => {
 
   const handleFormSubmit = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
+
+    if (persons.find((person) => person.name === newName)) {
+      alert(`${newName} is already in the phonebook`);
+      return;
+    }
+
     setPersons(persons.concat({ name: newName }));
     setNewName('');
   };
