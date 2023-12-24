@@ -12,8 +12,10 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.',
   ];
-  const [votes, setVotes] = useState(() => Array(anecdotes.length).fill(0));
-  console.log('🚀 ~ file: App.tsx:6 ~ App ~ votes:', votes);
+  const [votes, setVotes] = useState<number[]>(() =>
+    Array(anecdotes.length).fill(0)
+  );
+  const indexOfHighestVote = votes.indexOf(Math.max(...votes));
 
   const generateRandomNumber = () => {
     const maxNumber = anecdotes.length - 1;
@@ -46,6 +48,7 @@ const App = () => {
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {votes[selected]} votes</p>
       <button type="button" onClick={handleVote}>
@@ -54,6 +57,9 @@ const App = () => {
       <button type="button" onClick={handleNextAnecdote}>
         next anecdote
       </button>
+      <h1>Anecdote with most votes</h1>
+      <p>{anecdotes[indexOfHighestVote]}</p>
+      <p>has {votes[indexOfHighestVote]} votes</p>
     </div>
   );
 };
