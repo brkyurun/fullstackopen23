@@ -1,15 +1,17 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Filter } from './components/Filter';
 import { Form } from './components/Form';
 import { People } from './components/People';
+import axios from 'axios';
+
+type Person = {
+  name: string;
+  phoneNumber: string;
+  id: number;
+};
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phoneNumber: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', phoneNumber: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', phoneNumber: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', phoneNumber: '39-23-6423122', id: 4 },
-  ]);
+  const [persons, setPersons] = useState<Person[]>([]);
   const [newName, setNewName] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [filterQuery, setFilterQuery] = useState('');
@@ -18,6 +20,12 @@ const App = () => {
         person.name.toLowerCase().startsWith(filterQuery)
       )
     : persons;
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then((res) => setPersons(res.data as Person[]));
+  }, []);
 
   const handleFormSubmit = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
