@@ -2,9 +2,9 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Filter } from './components/Filter';
 import { Form } from './components/Form';
 import { People } from './components/People';
-import axios from 'axios';
+import { addPerson, getPersons } from './services/phonebookService';
 
-type Person = {
+export type Person = {
   name: string;
   phoneNumber: string;
   id: number;
@@ -12,9 +12,9 @@ type Person = {
 
 const App = () => {
   const [persons, setPersons] = useState<Person[]>([]);
-  const [newName, setNewName] = useState('');
-  const [newPhoneNumber, setNewPhoneNumber] = useState('');
-  const [filterQuery, setFilterQuery] = useState('');
+  const [newName, setNewName] = useState<string>('');
+  const [newPhoneNumber, setNewPhoneNumber] = useState<string>('');
+  const [filterQuery, setFilterQuery] = useState<string>('');
   const peopleToRender = filterQuery
     ? persons.filter((person) =>
         person.name.toLowerCase().startsWith(filterQuery)
@@ -22,9 +22,7 @@ const App = () => {
     : persons;
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then((res) => setPersons(res.data as Person[]));
+    getPersons().then((persons) => setPersons(persons as Person[]));
   }, []);
 
   const handleFormSubmit = (ev: FormEvent<HTMLFormElement>) => {
@@ -35,21 +33,15 @@ const App = () => {
       return;
     }
 
-    axios
-      .post('http://localhost:3001/persons', {
-        name: newName,
-        phoneNumber: newPhoneNumber,
-        id: persons.length + 1,
-      })
-      .then((res) => console.log(res));
+    addPerson({
+      name: newName,
+      phoneNumber: newPhoneNumber,
+      id: persons.length + 1,
+    }).then((person) => {
+      const newPersons = persons.concat(person);
+      setPersons(newPersons);
+    });
 
-    setPersons(
-      persons.concat({
-        name: newName,
-        phoneNumber: newPhoneNumber,
-        id: persons.length + 1,
-      })
-    );
     setNewName('');
     setNewPhoneNumber('');
   };
