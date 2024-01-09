@@ -54,6 +54,15 @@ const App = () => {
   };
 
   const handleDelete = (id: number) => {
+    if (
+      !window.confirm(
+        `Are you sure you want to delete ${
+          persons.find((person) => person.id === id)?.name
+        }?`
+      )
+    )
+      return;
+
     deleteEntry(id).then(() => {
       const updatedPersons = persons.filter((person) => person.id !== id);
       setPersons(updatedPersons);
