@@ -10,3 +10,8 @@
   width: fit-content;
   margin-bottom: 1rem;
 }
+
+.error {
+  border: 0.25rem solid rgb(255, 0, 0, 0.5);
+  color: rgb(240, 0, 0);
+}

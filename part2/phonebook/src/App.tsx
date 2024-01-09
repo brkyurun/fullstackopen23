@@ -19,9 +19,13 @@ const App = () => {
   const [newName, setNewName] = useState<string>('');
   const [newPhoneNumber, setNewPhoneNumber] = useState<string>('');
   const [filterQuery, setFilterQuery] = useState<string>('');
-  const [notificationMessage, setNotificationMessage] = useState<string | null>(
-    null
-  );
+  const [notificationOptions, setNotificationOptions] = useState<{
+    message: string | null;
+    status?: 'notification' | 'error';
+  }>({
+    message: null,
+    status: 'notification',
+  });
   const peopleToRender = filterQuery
     ? persons.filter((person) =>
         person.name.toLowerCase().startsWith(filterQuery)
@@ -41,18 +45,39 @@ const App = () => {
       updateEntry(existingPerson.id, {
         ...existingPerson,
         phoneNumber: newPhoneNumber,
-      }).then(() =>
-        setPersons(
-          persons.map((person) =>
-            person.id !== existingPerson.id
-              ? person
-              : { ...existingPerson, phoneNumber: newPhoneNumber }
+      })
+        .then(() =>
+          setPersons(
+            persons.map((person) =>
+              person.id !== existingPerson.id
+                ? person
+                : { ...existingPerson, phoneNumber: newPhoneNumber }
+            )
           )
         )
-      );
+        .catch(() => {
+          setNotificationOptions({
+            message: `${existingPerson.name} does not exist anymore.`,
+            status: 'error',
+          });
+          setTimeout(
+            () =>
+              setNotificationOptions({ message: null, status: 'notification' }),
+            NOTIFICATION_TIMEOUT
+          );
 
-      setNotificationMessage(`Updated phone number for ${newName}.`);
-      setTimeout(() => setNotificationMessage(null), NOTIFICATION_TIMEOUT);
+          setPersons(
+            persons.filter((person) => existingPerson.id !== person.id)
+          );
+        });
+
+      setNotificationOptions({
+        message: `Updated phone number for ${newName}.`,
+      });
+      setTimeout(
+        () => setNotificationOptions({ message: null }),
+        NOTIFICATION_TIMEOUT
+      );
 
       setNewName('');
       setNewPhoneNumber('');
@@ -60,8 +85,11 @@ const App = () => {
       return;
     }
 
-    setNotificationMessage(`Added ${newName} to the phonebook.`);
-    setTimeout(() => setNotificationMessage(null), NOTIFICATION_TIMEOUT);
+    setNotificationOptions({ message: `Added ${newName} to the phonebook.` });
+    setTimeout(
+      () => setNotificationOptions({ message: null }),
+      NOTIFICATION_TIMEOUT
+    );
 
     addEntry({
       name: newName,
@@ -107,7 +135,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={notificationMessage} />
+      <Notification {...notificationOptions} />
       <Filter filterQuery={filterQuery} onChange={handleFilterQueryInput} />
       <h2>Add new</h2>
       <Form
