@@ -2,7 +2,12 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Filter } from './components/Filter';
 import { Form } from './components/Form';
 import { People } from './components/People';
-import { addEntry, deleteEntry, getEntries } from './services/phonebookService';
+import {
+  addEntry,
+  deleteEntry,
+  getEntries,
+  updateEntry,
+} from './services/phonebookService';
 import { PhonebookEntry } from './types';
 
 const App = () => {
@@ -22,9 +27,26 @@ const App = () => {
 
   const handleFormSubmit = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
+    const existingPerson =
+      persons.find((person) => person.name === newName) ?? null;
 
-    if (persons.find((person) => person.name === newName)) {
-      alert(`${newName} is already in the phonebook`);
+    if (existingPerson) {
+      updateEntry(existingPerson.id, {
+        ...existingPerson,
+        phoneNumber: newPhoneNumber,
+      }).then(() =>
+        setPersons(
+          persons.map((person) =>
+            person.id !== existingPerson.id
+              ? person
+              : { ...existingPerson, phoneNumber: newPhoneNumber }
+          )
+        )
+      );
+
+      setNewName('');
+      setNewPhoneNumber('');
+
       return;
     }
 

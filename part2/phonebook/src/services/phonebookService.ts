@@ -17,4 +17,10 @@ const deleteEntry = (id: number) => {
     .then((res) => res.data);
 };
 
-export { getEntries, addEntry, deleteEntry };
+const updateEntry = (id: number, body: PhonebookEntry) => {
+  return axios
+    .put(`http://localhost:3001/persons/${id}`, body)
+    .then((res) => res.data);
+};
+
+export { getEntries, addEntry, deleteEntry, updateEntry };
