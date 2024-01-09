@@ -35,6 +35,14 @@ const App = () => {
       return;
     }
 
+    axios
+      .post('http://localhost:3001/persons', {
+        name: newName,
+        phoneNumber: newPhoneNumber,
+        id: persons.length + 1,
+      })
+      .then((res) => console.log(res));
+
     setPersons(
       persons.concat({
         name: newName,
