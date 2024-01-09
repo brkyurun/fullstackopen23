@@ -2,16 +2,11 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Filter } from './components/Filter';
 import { Form } from './components/Form';
 import { People } from './components/People';
-import { addPerson, getPersons } from './services/phonebookService';
-
-export type Person = {
-  name: string;
-  phoneNumber: string;
-  id: number;
-};
+import { addEntry, deleteEntry, getEntries } from './services/phonebookService';
+import { PhonebookEntry } from './types';
 
 const App = () => {
-  const [persons, setPersons] = useState<Person[]>([]);
+  const [persons, setPersons] = useState<PhonebookEntry[]>([]);
   const [newName, setNewName] = useState<string>('');
   const [newPhoneNumber, setNewPhoneNumber] = useState<string>('');
   const [filterQuery, setFilterQuery] = useState<string>('');
@@ -22,7 +17,7 @@ const App = () => {
     : persons;
 
   useEffect(() => {
-    getPersons().then((persons) => setPersons(persons as Person[]));
+    getEntries().then((people) => setPersons(people as PhonebookEntry[]));
   }, []);
 
   const handleFormSubmit = (ev: FormEvent<HTMLFormElement>) => {
@@ -33,7 +28,7 @@ const App = () => {
       return;
     }
 
-    addPerson({
+    addEntry({
       name: newName,
       phoneNumber: newPhoneNumber,
       id: persons.length + 1,
@@ -58,6 +53,13 @@ const App = () => {
     setFilterQuery(ev.target.value);
   };
 
+  const handleDelete = (id: number) => {
+    deleteEntry(id).then(() => {
+      const updatedPersons = persons.filter((person) => person.id !== id);
+      setPersons(updatedPersons);
+    });
+  };
+
   return (
     <div>
       <h1>Phonebook</h1>
@@ -71,7 +73,7 @@ const App = () => {
         handlePhoneNumberInput={handlePhoneNumberInput}
       />
       <h2>Numbers</h2>
-      <People people={peopleToRender} />
+      <People people={peopleToRender} onClick={handleDelete} />
     </div>
   );
 };

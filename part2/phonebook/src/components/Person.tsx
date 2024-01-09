@@ -1,15 +1,19 @@
+import type { PhonebookEntry } from '../types';
+
 type PersonProps = {
-  person: {
-    name: string;
-    phoneNumber: string;
-    id: number;
-  };
+  person: PhonebookEntry;
+  onClick: (id: number) => void;
 };
 
-export const Person = ({ person }: PersonProps) => {
+export const Person = ({ person, onClick }: PersonProps) => {
   return (
-    <p key={person.id}>
-      {person.name} {person.phoneNumber}
-    </p>
+    <>
+      <p key={person.id}>
+        {person.name} {person.phoneNumber}
+      </p>
+      <button type="button" onClick={() => onClick(person.id)}>
+        Delete {person.name}
+      </button>
+    </>
   );
 };
