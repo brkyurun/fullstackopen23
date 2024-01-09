@@ -9,12 +9,19 @@ import {
   updateEntry,
 } from './services/phonebookService';
 import { PhonebookEntry } from './types';
+import { Notification } from './components/Notification';
+import './styles.css';
+
+const NOTIFICATION_TIMEOUT = 2000;
 
 const App = () => {
   const [persons, setPersons] = useState<PhonebookEntry[]>([]);
   const [newName, setNewName] = useState<string>('');
   const [newPhoneNumber, setNewPhoneNumber] = useState<string>('');
   const [filterQuery, setFilterQuery] = useState<string>('');
+  const [notificationMessage, setNotificationMessage] = useState<string | null>(
+    null
+  );
   const peopleToRender = filterQuery
     ? persons.filter((person) =>
         person.name.toLowerCase().startsWith(filterQuery)
@@ -44,11 +51,17 @@ const App = () => {
         )
       );
 
+      setNotificationMessage(`Updated phone number for ${newName}.`);
+      setTimeout(() => setNotificationMessage(null), NOTIFICATION_TIMEOUT);
+
       setNewName('');
       setNewPhoneNumber('');
 
       return;
     }
+
+    setNotificationMessage(`Added ${newName} to the phonebook.`);
+    setTimeout(() => setNotificationMessage(null), NOTIFICATION_TIMEOUT);
 
     addEntry({
       name: newName,
@@ -94,6 +107,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notificationMessage} />
       <Filter filterQuery={filterQuery} onChange={handleFilterQueryInput} />
       <h2>Add new</h2>
       <Form
