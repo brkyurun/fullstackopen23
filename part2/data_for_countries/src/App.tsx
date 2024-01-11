@@ -16,6 +16,10 @@ function App() {
     country.name.common.toLowerCase().includes(filter.toLowerCase())
   );
 
+  const handleShowClick = (countryName: string) => {
+    setFilter(countryName);
+  };
+
   if (isPending) {
     return <div>Loading countries...</div>;
   }
@@ -37,7 +41,14 @@ function App() {
       )}
       {filteredCountries.length < 10 &&
         filteredCountries.length !== 1 &&
-        filteredCountries.map((country) => <div>{country.name.common}</div>)}
+        filteredCountries.map((country) => (
+          <div>
+            {country.name.common}
+            <button onClick={() => handleShowClick(country.name.common)}>
+              show
+            </button>
+          </div>
+        ))}
       {filteredCountries.length === 1 && (
         <Country country={filteredCountries[0]} />
       )}
