@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getCountries } from './services/countryService';
 import { useState } from 'react';
 import { Filter } from './components/Filter';
+import { Country } from './components/Country';
 
 function App() {
   const { data: countries, isPending } = useQuery({
@@ -12,7 +13,7 @@ function App() {
   console.log('🚀 ~ App ~ countries:', countries);
   const [filter, setFilter] = useState<string>('');
   const filteredCountries = countries?.filter((country: unknown) =>
-    country.name.official.toLowerCase().includes(filter.toLowerCase())
+    country.name.common.toLowerCase().includes(filter.toLowerCase())
   );
 
   if (isPending) {
@@ -31,12 +32,14 @@ function App() {
   return (
     <div>
       <Filter filter={filter} setFilter={setFilter} />
-      {filteredCountries.length > 10 ? (
+      {filteredCountries.length > 10 && (
         <div>Too many matches, please be more specific</div>
-      ) : filteredCountries.length < 10 ? (
-        filteredCountries.map((country) => <div>{country.name.official}</div>)
-      ) : (
-        filteredCountries[0]
+      )}
+      {filteredCountries.length < 10 &&
+        filteredCountries.length !== 1 &&
+        filteredCountries.map((country) => <div>{country.name.common}</div>)}
+      {filteredCountries.length === 1 && (
+        <Country country={filteredCountries[0]} />
       )}
     </div>
   );
