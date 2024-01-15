@@ -42,7 +42,7 @@ function App() {
       {filteredCountries.length < 10 &&
         filteredCountries.length !== 1 &&
         filteredCountries.map((country) => (
-          <div>
+          <div key={country.name.common}>
             {country.name.common}
             <button onClick={() => handleShowClick(country.name.common)}>
               show
